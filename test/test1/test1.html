@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+    <script type='text/javascript' src='../../dist/index.js'></script>
+    <script type='text/javascript'>
+        window.AsyncScriptLoader.script('../script/a.js', () => console.log('destroy a')).script('../script/b.js').wait()
+            .script('../script/c.js').destroy('../script/a.js')
+            .script(
+            () => console.log('...lsdfsdfsdfdf')
+            )
+            .run();
+    </script>
+</body>
+
+</html>

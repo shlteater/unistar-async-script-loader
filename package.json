@@ -1,0 +1,23 @@
+{
+  "name": "unistar-async-script-loader",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "prebuild": "webpack",
+    "test": "echo \"Error: test is specified in the testX.html in test folder, use webpack-dev-server to test\" && exit 1"
+  },
+  "keywords": [
+    "async",
+    "script",
+    "loader"
+  ],
+  "author": "shlteater@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/es6-promise": "0.0.32",
+    "typescript": "^2.0.10",
+    "webpack": "^1.13.3",
+    "webpack-dev-server": "^1.16.2"
+  }
+}
