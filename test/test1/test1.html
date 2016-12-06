@@ -9,7 +9,9 @@
     <script type='text/javascript'>
         window.AsyncScriptLoader.script('../script/a.js', () => console.log('destroy a')).script('../script/b.js').wait()
             .script('../script/c.js').destroy('../script/a.js')
-            .script(
+            .func(
+            () => console.log('...lsdfsdfsdfdf')
+            ).func(
             () => console.log('...lsdfsdfsdfdf')
             )
             .run();

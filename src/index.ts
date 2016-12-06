@@ -104,8 +104,6 @@ class LoadingChain {
             else if (scriptObj.type === 'function') {
                 // call the one-off function
                 scriptObj.fun.call(null);
-                // put in cache
-                GlobalScriptCache.put(scriptObj);
                 resolve();
             }
             // load destroy function
@@ -141,17 +139,11 @@ class LoadingChain {
         }
     }
 
-    private _buildScriptObj(script, destroyCallback) {
+    private _buildScriptObj(script, destroyCallback?) {
         const scriptObj: any = {};
-        if (typeof (script) === 'string') {
-            scriptObj.cacheKey = script;
-            scriptObj.type = 'url';
-            scriptObj.url = script;
-        } else if (typeof (script) === 'function') {
-            scriptObj.cacheKey = script.toString();
-            scriptObj.type = 'function';
-            scriptObj.fun = script;
-        }
+        scriptObj.cacheKey = script;
+        scriptObj.type = 'url';
+        scriptObj.url = script;
 
         if (typeof (destroyCallback) === 'function') {
             scriptObj.destroyCallback = destroyCallback;
@@ -159,17 +151,37 @@ class LoadingChain {
         return scriptObj;
     }
 
-    private _pushScript(script, destroyCallback) {
+    private _buildFuncObj(func) {
+        const scriptObj: any = {};
+        scriptObj.cacheKey = func.toString();
+        scriptObj.type = 'function';
+        scriptObj.fun = func;
+        return scriptObj;
+    }
+
+    private _pushScript(script, destroyCallback?) {
         if (this.queue.length == 0) {
             this._pushGroup();
         }
 
         const scriptObj = this._buildScriptObj(script, destroyCallback);
 
+        // script loadings are cached
         if (!GlobalScriptCache.contains(scriptObj.cacheKey)) {
             this.queue[this.queue.length - 1].push(scriptObj);
         }
 
+    }
+
+    private _pushFunc(func) {
+        if (this.queue.length == 0) {
+            this._pushGroup();
+        }
+
+        const scriptObj = this._buildFuncObj(func);
+
+        // function invokations are not cached
+        this.queue[this.queue.length - 1].push(scriptObj);
     }
 
     private _pushDestroy(script) {
@@ -186,8 +198,16 @@ class LoadingChain {
     /**
      * record a script loading task
      */
-    public script(script, destroyCallback) {
+    public script(script, destroyCallback?) {
         this._pushScript(script, destroyCallback);
+        return this;
+    }
+
+    /**
+     * record a function execution task
+     */
+    public func(func) {
+        this._pushFunc(func);
         return this;
     }
 
@@ -230,7 +250,7 @@ class LoadingChain {
  * the API class
  * 
  * the functions are divided into 2 modes:
- * script(), wait() and destory() run in record mode.
+ * script(), func(), wait() and destory() run in record mode.
  *      they will simply push a task in the running queue of the LoadingChain,
  *      and they does not perform the actural loading and destory task.
  * 
@@ -245,15 +265,24 @@ class AsyncScriptLoader {
      * record mode.
      *      record a script to be load.
      * 
-     * @param {string|function} script  - the script to load. 
+     * @param {string} script  - the script to load. 
      *                                      string parameter indicates the url of the script, and, when loaded, will append a <script> tag to document.body.
-     *                                      function parameter indicates a one-off function invocation. 
      * 
      * @param {function} destroyCallback  - (optional) the clean up method called by destory when the script is destroyed.
      *                                                 undo the side effect of loading and executing the script. 
      */
-    public script(script, destroyCallback) {
+    public script(script, destroyCallback?) {
         return new LoadingChain().script(script, destroyCallback);
+    };
+
+    /**
+     * record mode.
+     *      record a script to be load.
+     * 
+     * @param {function} func  - a one-off function invocation. 
+     */
+    public func(func) {
+        return new LoadingChain().func(func);
     };
 
     /**
