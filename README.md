@@ -3,8 +3,11 @@
 Asynchronous script loader to dynamicly load and destory arbitrary scripts.
 
 ## Getting Started
-Not yet in the npm.
-Just copy src/index.ts and use.
+install from https://www.npmjs.com/package/unistar-async-script-loader
+and use.
+```bash
+npm install unistar-async-script-loader
+```
 
 ## Usage
 ```javascript
