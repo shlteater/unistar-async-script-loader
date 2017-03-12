@@ -1,5 +1,9 @@
 # unistar-async-script-loader
 
+[![npm version](https://badge.fury.io/js/unistar-async-script-loader.svg)](https://badge.fury.io/js/unistar-async-script-loader)
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+[![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
+
 Asynchronous script loader to dynamicly load and destory arbitrary scripts.
 
 ## Getting Started
